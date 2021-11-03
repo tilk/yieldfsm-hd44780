@@ -10,5 +10,5 @@ extra-deps:
   - clash-lib-1.4.2
   - clash-ghc-1.4.2
   - github: tilk/yieldfsm
-    commit: d81c5811098e74d55abf48ec7392fb5241d364b8
+    commit: 5c0778a1dc8689e38db9c6893204406a15d09ce6
 

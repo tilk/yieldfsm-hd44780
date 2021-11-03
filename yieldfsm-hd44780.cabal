@@ -85,4 +85,5 @@ library
   hs-source-dirs: src
   exposed-modules:
     FSM.HD44780
+    FSM.HD44780.Definitions
 
