@@ -4,7 +4,10 @@ import Development.Shake
 import Development.Shake.FilePath
 import Clash.Main(defaultMain)
 
-buildPath :: String
+sourcePath :: FilePath
+sourcePath = "helloworld"
+
+buildPath :: FilePath
 buildPath = "_build"
 
 helloworldTop :: String
@@ -25,6 +28,9 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
     verilog "*" </> "*" <.> "v" %> \out -> do
         let outdir = takeFileName $ takeDirectory out
-        putInfo "Clash compile"
-        liftIO $ defaultMain ["-fclash-hdldir", buildPath, "-main-is", takeExtension outdir, dropExtension outdir, "-outputdir", buildPath, "-ihelloworld", "--verilog"]
+        let modName = dropExtension outdir
+        let topName = takeExtension outdir
+        need [sourcePath </> modName <.> "hs"]
+        putInfo $ "Clash compile " ++ outdir
+        liftIO $ defaultMain ["-fclash-hdldir", buildPath, "-main-is", topName, modName, "-outputdir", buildPath, "-i" ++ sourcePath, "--verilog"]
 

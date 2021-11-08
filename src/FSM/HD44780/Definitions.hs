@@ -4,24 +4,24 @@ module FSM.HD44780.Definitions where
 import Clash.Prelude
 
 data HD44780_Input = HD44780_Input {
-    hd44780_rs :: Bool,
-    hd44780_rw :: Bool,
-    hd44780_e :: Bool,
-    hd44780_idata :: BitVector 8
+    hd44780_rs    :: "rs"    ::: Bool,
+    hd44780_rw    :: "rw"    ::: Bool,
+    hd44780_e     :: "e"     ::: Bool,
+    hd44780_idata :: "idata" ::: BitVector 8
 } deriving (Show, Generic, NFDataX)
 
 data HD44780_Output = HD44780_Output {
-    hd44780_odata :: BitVector 8
+    hd44780_odata :: "odata" :::BitVector 8
 } deriving (Show, Generic, NFDataX)
 
 data Bus_Input = Bus_Input {
-    bus_valid :: Bool,
-    bus_rs :: Bool,
-    bus_data :: BitVector 8
+    bus_valid :: "valid" ::: Bool,
+    bus_rs    :: "rs"    ::: Bool,
+    bus_data  :: "data"  ::: BitVector 8
 } deriving (Show, Generic, NFDataX)
 
 data Bus_Output = Bus_Output {
-    bus_wait :: Bool
+    bus_wait :: "wait" ::: Bool
 } deriving (Show, Generic, NFDataX)
 
 empty_hd44780 :: HD44780_Input
