@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
-module FSM.HD44780 where
+module FSM.HD44780(hd44780, module FSM.HD44780.Definitions) where
 
 import FSM
 import FSM.HD44780.Definitions

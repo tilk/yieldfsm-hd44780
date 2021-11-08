@@ -89,3 +89,9 @@ library
     FSM.HD44780
     FSM.HD44780.Definitions
 
+executable helloworld
+  import: common-options
+  main-is: Shake.hs
+  build-depends: base, shake, clash-ghc, yieldfsm-hd44780
+  hs-source-dirs: shake
+
