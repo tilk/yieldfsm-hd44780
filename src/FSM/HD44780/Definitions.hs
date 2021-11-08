@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 module FSM.HD44780.Definitions where
 
 import Clash.Prelude
@@ -7,6 +8,10 @@ data HD44780_Input = HD44780_Input {
     hd44780_rw :: Bool,
     hd44780_e :: Bool,
     hd44780_idata :: BitVector 8
+} deriving (Show, Generic, NFDataX)
+
+data HD44780_Output = HD44780_Output {
+    hd44780_odata :: BitVector 8
 } deriving (Show, Generic, NFDataX)
 
 data Bus_Input = Bus_Input {
@@ -30,4 +35,30 @@ idle_bus = Bus_Output False
 
 busy_bus :: Bus_Output
 busy_bus = Bus_Output True
+
+type BitsFor k = CLog 2 (k+1)
+
+divRUSNat :: (1 <= b) => SNat a -> SNat b -> SNat (DivRU a b)
+divRUSNat SNat SNat = SNat
+
+unsigned :: forall k. KnownNat k => Unsigned (BitsFor k)
+unsigned = natToNum @k
+
+unsignedSNat :: KnownNat k => SNat k -> Unsigned (BitsFor k)
+unsignedSNat n = snatToNum n
+
+cycles_ps :: (1 <= period) => SNat period -> SNat k -> SNat (k `DivRU` period)
+cycles_ps SNat SNat = SNat
+
+unsigned_cycles_ps :: (1 <= period, KnownNat period, KnownNat k) => SNat period -> SNat k -> Unsigned (BitsFor (k `DivRU` period))
+unsigned_cycles_ps period k = snatToNum $ cycles_ps period k
+
+unsigned_cycles_ns :: (1 <= period, KnownNat period, KnownNat k) => SNat period -> SNat k -> Unsigned (BitsFor ((k * 1000) `DivRU` period))
+unsigned_cycles_ns period k = unsigned_cycles_ps period (mulSNat k (SNat @1000))
+
+unsigned_cycles_us :: (1 <= period, KnownNat period, KnownNat k) => SNat period -> SNat k -> Unsigned (BitsFor ((k * 1000000) `DivRU` period))
+unsigned_cycles_us period k = unsigned_cycles_ps period (mulSNat k (SNat @1000000))
+
+unsigned_cycles_ms :: (1 <= period, KnownNat period, KnownNat k) => SNat period -> SNat k -> Unsigned (BitsFor ((k * 1000000000) `DivRU` period))
+unsigned_cycles_ms period k = unsigned_cycles_ps period (mulSNat k (SNat @1000000000))
 

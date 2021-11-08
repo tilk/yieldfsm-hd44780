@@ -9,6 +9,7 @@ extra-deps:
   - clash-prelude-1.4.2
   - clash-lib-1.4.2
   - clash-ghc-1.4.2
+#  - ../clashfsm
   - github: tilk/yieldfsm
-    commit: 5c0778a1dc8689e38db9c6893204406a15d09ce6
+    commit: ebeebdd88b4f255793c7904c4595fcbbe9b0a8e5
 
