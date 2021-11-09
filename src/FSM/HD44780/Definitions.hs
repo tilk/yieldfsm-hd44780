@@ -36,6 +36,12 @@ idle_bus = Bus_Output False
 busy_bus :: Bus_Output
 busy_bus = Bus_Output True
 
+empty_bus :: Bus_Input
+empty_bus = Bus_Input False undefined undefined
+
+valid_bus :: Bool -> BitVector 8 -> Bus_Input
+valid_bus rs d = Bus_Input True rs d
+
 type BitsFor k = CLog 2 (k+1)
 
 divRUSNat :: (1 <= b) => SNat a -> SNat b -> SNat (DivRU a b)
