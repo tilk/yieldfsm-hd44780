@@ -42,7 +42,6 @@ forever:
     do:
         yield (empty_hd44780, idle_bus)
     until bus_valid bus'
-    yield (empty_hd44780, idle_bus)
     call sendbyte (bus_rs bus', bus_data bus')
     call delay 53
 |]
