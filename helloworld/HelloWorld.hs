@@ -5,6 +5,8 @@ import Clash.Annotations.TH
 import FSM.HD44780
 import FSM
 
+createDomain (knownVDomain @XilinxSystem) {vName="ExampleSystem", vPeriod=30030}
+
 [fsm|helloWorld :: forall dom. HiddenClockResetEnable dom
                 => Signal dom Bus_Output
                 -> Signal dom Bus_Input
@@ -22,11 +24,16 @@ forever:
     yield empty_bus
 |]
 
+topCircuit :: HiddenClockResetEnable ExampleSystem
+           => Signal ExampleSystem HD44780_Input
+topCircuit = fst <$> sig where
+    sig = hd44780 $ helloWorld $ snd <$> sig
+
 topEntity 
-    :: "clk" ::: Clock System
-    -> "rst" ::: Reset System
-    -> "hd44780" ::: Signal System HD44780_Input
-topEntity clk rst = exposeClockResetEnable (fst <$> hd44780 (pure $ Bus_Input False undefined undefined)) clk rst enableGen
+    :: "clk" ::: Clock ExampleSystem
+    -> "rst" ::: Reset ExampleSystem
+    -> "hd44780" ::: Signal ExampleSystem HD44780_Input
+topEntity clk rst = exposeClockResetEnable topCircuit clk rst enableGen
 
 makeTopEntity 'topEntity
 
