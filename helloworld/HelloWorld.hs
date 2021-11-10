@@ -24,16 +24,16 @@ forever:
     yield empty_bus
 |]
 
-topCircuit :: HiddenClockResetEnable ExampleSystem
-           => Signal ExampleSystem HD44780_Input
-topCircuit = fst <$> sig where
+helloWorld8bitCircuit :: HiddenClockResetEnable ExampleSystem
+                      => Signal ExampleSystem HD44780_Input
+helloWorld8bitCircuit = fst <$> sig where
     sig = hd44780 $ helloWorld $ snd <$> sig
 
-topEntity 
+helloWorld8bit 
     :: "clk" ::: Clock ExampleSystem
     -> "rst" ::: Reset ExampleSystem
     -> "hd44780" ::: Signal ExampleSystem HD44780_Input
-topEntity clk rst = exposeClockResetEnable topCircuit clk rst enableGen
+helloWorld8bit clk rst = exposeClockResetEnable helloWorld8bitCircuit clk rst enableGen
 
-makeTopEntity 'topEntity
+makeTopEntity 'helloWorld8bit
 

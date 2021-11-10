@@ -24,7 +24,7 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
         putInfo "Cleaning build directory"
         removeFilesAfter buildPath ["//*"]
 
-    phony "compile" $ need [verilog "topEntity" </> "topEntity" <.> "v"]
+    phony "compile" $ need [verilog "helloWorld8bit" </> "helloWorld8bit" <.> "v"]
 
     verilog "*" </> "*" <.> "v" %> \out -> do
         let outdir = takeFileName $ takeDirectory out
