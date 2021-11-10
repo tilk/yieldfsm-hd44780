@@ -29,13 +29,15 @@ call sendbyte (False, 0x30)
 call delay 100
 call sendbyte (False, 0x30)
 call delay 100
-call sendbyte (False, 0x3c)
+call sendbyte (False, 0x38)
 call delay 53
 call sendbyte (False, 0x08)
 call delay 53
 call sendbyte (False, 0x01)
 call delay 3000
-call sendbyte (False, 0x07)
+call sendbyte (False, 0x06)
+call delay 53
+call sendbyte (False, 0x0c)
 call delay 53
 -- handle bus requests
 forever:

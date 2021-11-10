@@ -20,6 +20,13 @@ call send (True, fromIntegral $ fromEnum 'e')
 call send (True, fromIntegral $ fromEnum 'l')
 call send (True, fromIntegral $ fromEnum 'l')
 call send (True, fromIntegral $ fromEnum 'o')
+call send (True, fromIntegral $ fromEnum ' ')
+call send (True, fromIntegral $ fromEnum 'w')
+call send (True, fromIntegral $ fromEnum 'o')
+call send (True, fromIntegral $ fromEnum 'r')
+call send (True, fromIntegral $ fromEnum 'l')
+call send (True, fromIntegral $ fromEnum 'd')
+call send (True, fromIntegral $ fromEnum '!')
 forever:
     yield empty_bus
 |]
