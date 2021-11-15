@@ -88,12 +88,15 @@ fun delay us :: Unsigned (BitsFor 40000):
 fun sendDelay (us :: Unsigned (BitsFor 4100), rs, d):
     call sendbyte (rs, d)
     call delay (zeroExtend us)
-fun sendWait (rs, d):
-    call sendbyte (rs, d)
+fun wait ():
     var b = undefined
     do:
         b = call readbyte False
     while testBit b 7
+fun sendWait (rs, d):
+    call sendbyte (rs, d)
+    call wait ()
+    call delay 1
 -- wait 40 ms
 call delay 40000
 -- initialize display
