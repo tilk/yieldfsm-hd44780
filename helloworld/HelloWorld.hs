@@ -34,15 +34,28 @@ forever:
 |]
 
 helloWorld8bitCircuit :: HiddenClockResetEnable ExampleSystem
-                      => Signal ExampleSystem Data_Input
+                      => Signal ExampleSystem (Data_Input 8)
 helloWorld8bitCircuit = fst <$> sig where
-    sig = controller $ helloWorld $ snd <$> sig
+    sig = controller8bit $ helloWorld $ snd <$> sig
 
-helloWorld8bit 
+helloWorld8bit
     :: "clk" ::: Clock ExampleSystem
     -> "rst" ::: Reset ExampleSystem
-    -> "hd44780" ::: Signal ExampleSystem Data_Input
+    -> "hd44780" ::: Signal ExampleSystem (Data_Input 8)
 helloWorld8bit clk rst = exposeClockResetEnable helloWorld8bitCircuit clk rst enableGen
 
 makeTopEntity 'helloWorld8bit
+
+helloWorld4bitCircuit :: HiddenClockResetEnable ExampleSystem
+                      => Signal ExampleSystem (Data_Input 4)
+helloWorld4bitCircuit = fst <$> sig where
+    sig = controller4bit $ helloWorld $ snd <$> sig
+
+helloWorld4bit
+    :: "clk" ::: Clock ExampleSystem
+    -> "rst" ::: Reset ExampleSystem
+    -> "hd44780" ::: Signal ExampleSystem (Data_Input 4)
+helloWorld4bit clk rst = exposeClockResetEnable helloWorld4bitCircuit clk rst enableGen
+
+makeTopEntity 'helloWorld4bit
 

@@ -3,14 +3,14 @@ module FSM.HD44780.Definitions where
 
 import Clash.Prelude
 
-data Data_Input = Data_Input {
+data Data_Input n = Data_Input {
     data_rs    :: "rs"    ::: Bool,
     data_rw    :: "rw"    ::: Bool,
     data_e     :: "e"     ::: Bool,
-    data_idata :: "idata" ::: BitVector 8
+    data_idata :: "idata" ::: BitVector n
 } deriving (Show, Generic, NFDataX)
 
-data Data_Output = Data_Output {
+data Data_Output n = Data_Output {
     data_odata :: "odata" :::BitVector 8
 } deriving (Show, Generic, NFDataX)
 
@@ -24,10 +24,10 @@ data Bus_Output = Bus_Output {
     bus_wait :: "wait" ::: Bool
 } deriving (Show, Generic, NFDataX)
 
-empty_data :: Data_Input
+empty_data :: KnownNat n => Data_Input n
 empty_data = Data_Input False False False 0
 
-write_data :: Bool -> BitVector 8 -> Bool -> Data_Input
+write_data :: KnownNat n => Bool -> BitVector n -> Bool -> Data_Input n
 write_data rs d e = Data_Input rs False e d
 
 idle_bus :: Bus_Output
