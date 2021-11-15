@@ -3,15 +3,15 @@ module FSM.HD44780.Definitions where
 
 import Clash.Prelude
 
-data HD44780_Input = HD44780_Input {
-    hd44780_rs    :: "rs"    ::: Bool,
-    hd44780_rw    :: "rw"    ::: Bool,
-    hd44780_e     :: "e"     ::: Bool,
-    hd44780_idata :: "idata" ::: BitVector 8
+data Data_Input = Data_Input {
+    data_rs    :: "rs"    ::: Bool,
+    data_rw    :: "rw"    ::: Bool,
+    data_e     :: "e"     ::: Bool,
+    data_idata :: "idata" ::: BitVector 8
 } deriving (Show, Generic, NFDataX)
 
-data HD44780_Output = HD44780_Output {
-    hd44780_odata :: "odata" :::BitVector 8
+data Data_Output = Data_Output {
+    data_odata :: "odata" :::BitVector 8
 } deriving (Show, Generic, NFDataX)
 
 data Bus_Input = Bus_Input {
@@ -24,11 +24,11 @@ data Bus_Output = Bus_Output {
     bus_wait :: "wait" ::: Bool
 } deriving (Show, Generic, NFDataX)
 
-empty_hd44780 :: HD44780_Input
-empty_hd44780 = HD44780_Input False False False 0
+empty_data :: Data_Input
+empty_data = Data_Input False False False 0
 
-write_hd44780 :: Bool -> BitVector 8 -> Bool -> HD44780_Input
-write_hd44780 rs d e = HD44780_Input rs False e d
+write_data :: Bool -> BitVector 8 -> Bool -> Data_Input
+write_data rs d e = Data_Input rs False e d
 
 idle_bus :: Bus_Output
 idle_bus = Bus_Output False
