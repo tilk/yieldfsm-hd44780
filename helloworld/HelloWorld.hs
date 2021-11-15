@@ -59,3 +59,18 @@ helloWorld4bit clk rst = exposeClockResetEnable helloWorld4bitCircuit clk rst en
 
 makeTopEntity 'helloWorld4bit
 
+helloWorld8bitBiCircuit :: HiddenClockResetEnable ExampleSystem
+                        => BiSignalIn 'Floating ExampleSystem 8
+                        -> (Signal ExampleSystem Data_Flags, BiSignalOut 'Floating ExampleSystem 8)
+helloWorld8bitBiCircuit d = (f, di) where
+    (f, di, bo) = controller8bitBi (d, helloWorld bo)
+
+helloWorld8bitBi
+    :: "clk" ::: Clock ExampleSystem
+    -> "rst" ::: Reset ExampleSystem
+    -> "hd44780_data" ::: BiSignalIn 'Floating ExampleSystem 8
+    -> "hd44780" ::: ("flags" ::: Signal ExampleSystem Data_Flags, BiSignalOut 'Floating ExampleSystem 8)
+helloWorld8bitBi clk rst = exposeClockResetEnable helloWorld8bitBiCircuit clk rst enableGen
+
+makeTopEntity 'helloWorld8bitBi
+
