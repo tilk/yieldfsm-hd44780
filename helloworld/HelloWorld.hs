@@ -4,6 +4,10 @@ import Clash.Prelude
 import Clash.Annotations.TH
 import FSM.HD44780
 import FSM
+import qualified Clash.Sized.Vector as V
+
+helloWorldVec :: Vec 12 (BitVector 8)
+helloWorldVec = map (fromIntegral . fromEnum) $ 'H':>'e':>'l':>'l':>'o':>' ':>'w':>'o':>'r':>'l':>'d':>'!':>Nil
 
 createDomain (knownVDomain @XilinxSystem) {vName="ExampleSystem", vPeriod=30030}
 
@@ -17,18 +21,11 @@ fun send(rs, d):
     while bus_wait bus'
 fun sendData d:
     ret call send(True, d)
-call sendData (fromIntegral $ fromEnum 'H')
-call sendData (fromIntegral $ fromEnum 'e')
-call sendData (fromIntegral $ fromEnum 'l')
-call sendData (fromIntegral $ fromEnum 'l')
-call sendData (fromIntegral $ fromEnum 'o')
-call sendData (fromIntegral $ fromEnum ' ')
-call sendData (fromIntegral $ fromEnum 'w')
-call sendData (fromIntegral $ fromEnum 'o')
-call sendData (fromIntegral $ fromEnum 'r')
-call sendData (fromIntegral $ fromEnum 'l')
-call sendData (fromIntegral $ fromEnum 'd')
-call sendData (fromIntegral $ fromEnum '!')
+var x = 0
+do:
+    call sendData (helloWorldVec !! x)
+    x = x + 1
+while x < length helloWorldVec
 forever:
     yield empty_bus
 |]
