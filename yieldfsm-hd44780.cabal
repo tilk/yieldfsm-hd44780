@@ -88,6 +88,7 @@ library
   exposed-modules:
     FSM.HD44780
     FSM.HD44780.Definitions
+    FSM.HD44780.Commands
 
 executable helloworld
   import: common-options

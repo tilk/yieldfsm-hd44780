@@ -15,18 +15,20 @@ fun send(rs, d):
     do:
         yield valid_bus rs d
     while bus_wait bus'
-call send (True, fromIntegral $ fromEnum 'H')
-call send (True, fromIntegral $ fromEnum 'e')
-call send (True, fromIntegral $ fromEnum 'l')
-call send (True, fromIntegral $ fromEnum 'l')
-call send (True, fromIntegral $ fromEnum 'o')
-call send (True, fromIntegral $ fromEnum ' ')
-call send (True, fromIntegral $ fromEnum 'w')
-call send (True, fromIntegral $ fromEnum 'o')
-call send (True, fromIntegral $ fromEnum 'r')
-call send (True, fromIntegral $ fromEnum 'l')
-call send (True, fromIntegral $ fromEnum 'd')
-call send (True, fromIntegral $ fromEnum '!')
+fun sendData d:
+    ret call send(True, d)
+call sendData (fromIntegral $ fromEnum 'H')
+call sendData (fromIntegral $ fromEnum 'e')
+call sendData (fromIntegral $ fromEnum 'l')
+call sendData (fromIntegral $ fromEnum 'l')
+call sendData (fromIntegral $ fromEnum 'o')
+call sendData (fromIntegral $ fromEnum ' ')
+call sendData (fromIntegral $ fromEnum 'w')
+call sendData (fromIntegral $ fromEnum 'o')
+call sendData (fromIntegral $ fromEnum 'r')
+call sendData (fromIntegral $ fromEnum 'l')
+call sendData (fromIntegral $ fromEnum 'd')
+call sendData (fromIntegral $ fromEnum '!')
 forever:
     yield empty_bus
 |]
