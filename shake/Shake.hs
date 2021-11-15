@@ -26,7 +26,8 @@ main = shakeArgs shakeOptions { shakeFiles = "_build" } $ do
 
     phony "compile" $ need [verilog "helloWorld8bit" </> "helloWorld8bit" <.> "v",
                             verilog "helloWorld4bit" </> "helloWorld4bit" <.> "v",
-                            verilog "helloWorld8bitBi" </> "helloWorld8bitBi" <.> "v"]
+                            verilog "helloWorld8bitBi" </> "helloWorld8bitBi" <.> "v",
+                            verilog "helloWorld4bitBi" </> "helloWorld4bitBi" <.> "v"]
 
     verilog "*" </> "*" <.> "v" %> \out -> do
         let outdir = takeFileName $ takeDirectory out
