@@ -33,14 +33,14 @@ fun sendDelay (us :: Unsigned (BitsFor 4100), rs, d):
 -- wait 40 ms
 call delay 40000
 -- initialize display
-call sendDelay (4100, False, pack $ Function F8bit F1line F5x8font)
-call sendDelay (100,  False, pack $ Function F8bit F1line F5x8font)
-call sendDelay (100,  False, pack $ Function F8bit F1line F5x8font)
-call sendDelay (53,   False, pack $ Function F8bit F2lines F5x8font)
-call sendDelay (53,   False, pack $ Display DOff DNoCursor DNoBlink)
-call sendDelay (3000, False, pack $ Clear)
-call sendDelay (53,   False, pack $ EntryMode EIncrement ENoShift)
-call sendDelay (53,   False, pack $ Display DOn DNoCursor DNoBlink)
+call sendDelay (4100, Instr, pack $ Function F8bit F1line F5x8font)
+call sendDelay (100,  Instr, pack $ Function F8bit F1line F5x8font)
+call sendDelay (100,  Instr, pack $ Function F8bit F1line F5x8font)
+call sendDelay (53,   Instr, pack $ Function F8bit F2lines F5x8font)
+call sendDelay (53,   Instr, pack $ Display DOff DNoCursor DNoBlink)
+call sendDelay (3000, Instr, pack $ Clear)
+call sendDelay (53,   Instr, pack $ EntryMode EIncrement ENoShift)
+call sendDelay (53,   Instr, pack $ Display DOn DNoCursor DNoBlink)
 -- handle bus requests
 forever:
     do:
@@ -49,9 +49,9 @@ forever:
     call sendDelay (53, bus_rs bus', bus_data bus')
 |]
 
-mkMaybe :: Bool -> a -> Maybe a
-mkMaybe False x = Just x
-mkMaybe True  _ = Nothing
+mkMaybe :: RWFlag -> a -> Maybe a
+mkMaybe Write x = Just x
+mkMaybe Read  _ = Nothing
 
 controller8bitBi :: forall dom period. (HiddenClockResetEnable dom, DomainPeriod dom ~ period, KnownNat period, 1 <= period)
                  => (BiSignalIn 'Floating dom 8, Signal dom Bus_Input)
@@ -91,7 +91,7 @@ fun sendDelay (us :: Unsigned (BitsFor 4100), rs, d):
 fun wait ():
     var b = undefined
     do:
-        b = call readbyte False
+        b = call readbyte Instr
     while testBit b 7
 fun sendWait (rs, d):
     call sendbyte (rs, d)
@@ -100,14 +100,14 @@ fun sendWait (rs, d):
 -- wait 40 ms
 call delay 40000
 -- initialize display
-call sendDelay (4100, False, pack $ Function F8bit F1line F5x8font)
-call sendDelay (100,  False, pack $ Function F8bit F1line F5x8font)
-call sendDelay (100,  False, pack $ Function F8bit F1line F5x8font)
-call sendDelay (53,   False, pack $ Function F8bit F2lines F5x8font)
-call sendWait (False, pack $ Display DOff DNoCursor DNoBlink)
-call sendWait (False, pack $ Clear)
-call sendWait (False, pack $ EntryMode EIncrement ENoShift)
-call sendWait (False, pack $ Display DOn DNoCursor DNoBlink)
+call sendDelay (4100, Instr, pack $ Function F8bit F1line F5x8font)
+call sendDelay (100,  Instr, pack $ Function F8bit F1line F5x8font)
+call sendDelay (100,  Instr, pack $ Function F8bit F1line F5x8font)
+call sendDelay (53,   Instr, pack $ Function F8bit F2lines F5x8font)
+call sendWait (Instr, pack $ Display DOff DNoCursor DNoBlink)
+call sendWait (Instr, pack $ Clear)
+call sendWait (Instr, pack $ EntryMode EIncrement ENoShift)
+call sendWait (Instr, pack $ Display DOn DNoCursor DNoBlink)
 -- handle bus requests
 forever:
     do:
@@ -144,15 +144,15 @@ fun sendDelay (us :: Unsigned (BitsFor 4100), rs, d):
 -- wait 40 ms
 call delay 40000
 -- initialize display
-call sendNibbleDelay (4100, False, 0x03)
-call sendNibbleDelay (100,  False, 0x03)
-call sendNibbleDelay (100,  False, 0x03)
-call sendNibbleDelay (100,  False, 0x02)
-call sendDelay (53,   False, pack $ Function F4bit F2lines F5x8font)
-call sendDelay (53,   False, pack $ Display DOff DNoCursor DNoBlink)
-call sendDelay (3000, False, pack $ Clear)
-call sendDelay (53,   False, pack $ EntryMode EIncrement ENoShift)
-call sendDelay (53,   False, pack $ Display DOn DNoCursor DNoBlink)
+call sendNibbleDelay (4100, Instr, 0x03)
+call sendNibbleDelay (100,  Instr, 0x03)
+call sendNibbleDelay (100,  Instr, 0x03)
+call sendNibbleDelay (100,  Instr, 0x02)
+call sendDelay (53,   Instr, pack $ Function F4bit F2lines F5x8font)
+call sendDelay (53,   Instr, pack $ Display DOff DNoCursor DNoBlink)
+call sendDelay (3000, Instr, pack $ Clear)
+call sendDelay (53,   Instr, pack $ EntryMode EIncrement ENoShift)
+call sendDelay (53,   Instr, pack $ Display DOn DNoCursor DNoBlink)
 -- handle bus requests
 forever:
     do:
@@ -210,7 +210,7 @@ fun sendDelay (us :: Unsigned (BitsFor 4100), rs, d):
 fun wait ():
     var b = undefined
     do:
-        b = call readbyte False
+        b = call readbyte Instr
     while testBit b 7
 fun sendWait (rs, d):
     call sendbyte (rs, d)
@@ -219,14 +219,14 @@ fun sendWait (rs, d):
 -- wait 40 ms
 call delay 40000
 -- initialize display
-call sendNibbleDelay (4100, False, 0x3)
-call sendNibbleDelay (100,  False, 0x3)
-call sendNibbleDelay (100,  False, 0x3)
-call sendNibbleDelay (100,  False, 0x2)
-call sendWait (False, pack $ Display DOff DNoCursor DNoBlink)
-call sendWait (False, pack $ Clear)
-call sendWait (False, pack $ EntryMode EIncrement ENoShift)
-call sendWait (False, pack $ Display DOn DNoCursor DNoBlink)
+call sendNibbleDelay (4100, Instr, 0x3)
+call sendNibbleDelay (100,  Instr, 0x3)
+call sendNibbleDelay (100,  Instr, 0x3)
+call sendNibbleDelay (100,  Instr, 0x2)
+call sendWait (Instr, pack $ Display DOff DNoCursor DNoBlink)
+call sendWait (Instr, pack $ Clear)
+call sendWait (Instr, pack $ EntryMode EIncrement ENoShift)
+call sendWait (Instr, pack $ Display DOn DNoCursor DNoBlink)
 -- handle bus requests
 forever:
     do:

@@ -3,9 +3,15 @@ module FSM.HD44780.Definitions where
 
 import Clash.Prelude
 
+data RSFlag = Instr | Data
+    deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
+
+data RWFlag = Write | Read
+    deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
+
 data Data_Flags = Data_Flags {
-    data_rs    :: "rs"    ::: Bool,
-    data_rw    :: "rw"    ::: Bool,
+    data_rs    :: "rs"    ::: RSFlag,
+    data_rw    :: "rw"    ::: RWFlag,
     data_e     :: "e"     ::: Bool
 } deriving (Show, Generic, NFDataX)
 
@@ -13,7 +19,7 @@ type Data_Input n = ("flags" ::: Data_Flags, "data" ::: BitVector n)
 
 data Bus_Input = Bus_Input {
     bus_valid :: "valid" ::: Bool,
-    bus_rs    :: "rs"    ::: Bool,
+    bus_rs    :: "rs"    ::: RSFlag,
     bus_data  :: "data"  ::: BitVector 8
 } deriving (Show, Generic, NFDataX)
 
@@ -22,13 +28,13 @@ data Bus_Output = Bus_Output {
 } deriving (Show, Generic, NFDataX)
 
 empty_data :: KnownNat n => Data_Input n
-empty_data = (Data_Flags False False False, 0)
+empty_data = (Data_Flags Instr Write False, 0)
 
-write_data :: KnownNat n => Bool -> BitVector n -> Bool -> Data_Input n
-write_data rs d e = (Data_Flags rs False e, d)
+write_data :: KnownNat n => RSFlag -> BitVector n -> Bool -> Data_Input n
+write_data rs d e = (Data_Flags rs Write e, d)
 
-read_data :: KnownNat n => Bool -> Bool -> Data_Input n
-read_data rs e = (Data_Flags rs True e, undefined)
+read_data :: KnownNat n => RSFlag -> Bool -> Data_Input n
+read_data rs e = (Data_Flags rs Read e, undefined)
 
 idle_bus :: Bus_Output
 idle_bus = Bus_Output False
@@ -39,7 +45,7 @@ busy_bus = Bus_Output True
 empty_bus :: Bus_Input
 empty_bus = Bus_Input False undefined undefined
 
-valid_bus :: Bool -> BitVector 8 -> Bus_Input
+valid_bus :: RSFlag -> BitVector 8 -> Bus_Input
 valid_bus rs d = Bus_Input True rs d
 
 type BitsFor k = CLog 2 (k+1)

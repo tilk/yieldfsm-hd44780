@@ -20,7 +20,7 @@ fun send(rs, d):
         yield valid_bus rs d
     while bus_wait bus'
 fun sendData d:
-    ret call send(True, d)
+    ret call send(Data, d)
 var x = 0
 do:
     call sendData (helloWorldVec !! x)
