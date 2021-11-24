@@ -16,17 +16,19 @@ import Control.Arrow((***))
                     => Signal dom Bus_Input
                     -> Signal dom (Data_Input 8, Bus_Output)
 input bus
+output d = empty_data :: Data_Input 8
+output b = busy_bus
 fun sendbyte (rs, d):
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d50:
-        yield (write_data rs d False, busy_bus)
+        yield<d> write_data rs d False
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d250:
-        yield (write_data rs d True, busy_bus)
+        yield<d> write_data rs d True
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d200:
-        yield (write_data rs d False, busy_bus)
+        yield<d> write_data rs d False
 fun delay us :: Unsigned (BitsFor 40000):
     repeat1 us:
         repeat1 unsigned_cycles_us (clockPeriod @dom) d1:
-            yield (empty_data, busy_bus)
+            yield
 fun sendDelay (us :: Unsigned (BitsFor 4100), rs, d):
     call sendbyte (rs, d)
     call delay (zeroExtend us)
@@ -44,7 +46,7 @@ call sendDelay (53,   Instr, pack $ Display DOn DNoCursor DNoBlink)
 -- handle bus requests
 forever:
     do:
-        yield (empty_data, idle_bus)
+        yield<b> idle_bus
     until bus_valid bus'
     call sendDelay (53, bus_rs bus', bus_data bus')
 |]
@@ -65,26 +67,28 @@ controller8bitBi (bd, bi) = (df, writeToBiSignal bd d', bo)
                       => Signal dom (BitVector 8, Bus_Input)
                       -> Signal dom (Data_Input 8, Bus_Output)
 input (di, bus)
+output d = empty_data
+output b = busy_bus
 fun sendbyte (rs, d):
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d50:
-        yield (write_data rs d False, busy_bus)
+        yield<d> write_data rs d False
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d250:
-        yield (write_data rs d True, busy_bus)
+        yield<d> write_data rs d True
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d200:
-        yield (write_data rs d False, busy_bus)
+        yield<d> write_data rs d False
 fun readbyte rs:
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d50:
-        yield (read_data rs False, busy_bus)
+        yield<d> read_data rs False
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d250:
-        yield (read_data rs True, busy_bus)
+        yield<d> read_data rs True
     let d = di
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d200:
-        yield (read_data rs False, busy_bus)
+        yield<d> read_data rs False
     ret d
 fun delay us :: Unsigned (BitsFor 40000):
     repeat1 us:
         repeat1 unsigned_cycles_us (clockPeriod @dom) d1:
-            yield (empty_data, busy_bus)
+            yield
 fun sendDelay (us :: Unsigned (BitsFor 4100), rs, d):
     call sendbyte (rs, d)
     call delay (zeroExtend us)
@@ -111,7 +115,7 @@ call sendWait (Instr, pack $ Display DOn DNoCursor DNoBlink)
 -- handle bus requests
 forever:
     do:
-        yield (empty_data, idle_bus)
+        yield<b> idle_bus
     until bus_valid bus'
     call sendWait (bus_rs bus', bus_data bus')
 |]
@@ -120,13 +124,15 @@ forever:
                     => Signal dom Bus_Input
                     -> Signal dom (Data_Input 4, Bus_Output)
 input bus
+output d = empty_data :: Data_Input 4
+output b = busy_bus
 fun sendnibble (rs, d):
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d50:
-        yield (write_data rs d False, busy_bus)
+        yield<d> write_data rs d False
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d250:
-        yield (write_data rs d True, busy_bus)
+        yield<d> write_data rs d True
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d200:
-        yield (write_data rs d False, busy_bus)
+        yield<d> write_data rs d False
 fun sendbyte (rs, d):
     let p = unpack d
     call sendnibble (rs, fst p)
@@ -134,7 +140,7 @@ fun sendbyte (rs, d):
 fun delay us :: Unsigned (BitsFor 40000):
     repeat1 us:
         repeat1 unsigned_cycles_us (clockPeriod @dom) d1:
-            yield (empty_data, busy_bus)
+            yield
 fun sendNibbleDelay (us :: Unsigned (BitsFor 4100), rs, d):
     call sendnibble (rs, d)
     call delay (zeroExtend us)
@@ -156,7 +162,7 @@ call sendDelay (53,   Instr, pack $ Display DOn DNoCursor DNoBlink)
 -- handle bus requests
 forever:
     do:
-        yield (empty_data, idle_bus)
+        yield<b> idle_bus
     until bus_valid bus'
     call sendDelay (53, bus_rs bus', bus_data bus')
 |]
@@ -173,25 +179,27 @@ controller4bitBi (bd, bi) = (df, writeToBiSignal bd d', bo)
                       => Signal dom (BitVector 4, Bus_Input)
                       -> Signal dom (Data_Input 4, Bus_Output)
 input (di, bus)
+output d = empty_data
+output b = busy_bus
 fun sendnibble (rs, d):
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d50:
-        yield (write_data rs d False, busy_bus)
+        yield<d> write_data rs d False
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d250:
-        yield (write_data rs d True, busy_bus)
+        yield<d> write_data rs d True
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d200:
-        yield (write_data rs d False, busy_bus)
+        yield<d> write_data rs d False
 fun sendbyte (rs, d):
     let p = unpack d
     call sendnibble (rs, fst p)
     call sendnibble (rs, snd p)
 fun readnibble rs:
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d50:
-        yield (read_data rs False, busy_bus)
+        yield<d> read_data rs False
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d250:
-        yield (read_data rs True, busy_bus)
+        yield<d> read_data rs True
     let d = di
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d200:
-        yield (read_data rs False, busy_bus)
+        yield<d> read_data rs False
     ret d
 fun readbyte rs:
     let dh = call readnibble rs
@@ -200,7 +208,7 @@ fun readbyte rs:
 fun delay us :: Unsigned (BitsFor 40000):
     repeat1 us:
         repeat1 unsigned_cycles_us (clockPeriod @dom) d1:
-            yield (empty_data, busy_bus)
+            yield
 fun sendNibbleDelay (us :: Unsigned (BitsFor 4100), rs, d):
     call sendnibble (rs, d)
     call delay (zeroExtend us)
@@ -230,7 +238,7 @@ call sendWait (Instr, pack $ Display DOn DNoCursor DNoBlink)
 -- handle bus requests
 forever:
     do:
-        yield (empty_data, idle_bus)
+        yield<b> idle_bus
     until bus_valid bus'
     call sendWait (bus_rs bus', bus_data bus')
 |]
