@@ -5,11 +5,11 @@ license:             BSD-2-Clause
 author:              Marek Materzok <tilk@tilk.eu>
 maintainer:          Marek Materzok <tilk@tilk.eu>
 category:            Hardware
-synopsis:            YieldFSM, a DSL for describing finite state machines in Clash
+synopsis:            HD44780 display controller using YieldFSM
 
 source-repository head
   type: git
-  location: https://github.com/tilk/yieldfsm
+  location: https://github.com/tilk/yieldfsm-hd44780
 
 common common-options
   default-extensions:
