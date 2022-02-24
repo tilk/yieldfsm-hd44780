@@ -67,7 +67,7 @@ controller8bitBi (bd, bi) = (df, writeToBiSignal bd d', bo)
                       => Signal dom (BitVector 8, Bus_Input)
                       -> Signal dom (Data_Input 8, Bus_Output)
 input (di, bus)
-output d = empty_data
+output d = empty_data :: Data_Input 8
 output b = busy_bus
 fun sendbyte (rs, d):
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d50:
@@ -179,7 +179,7 @@ controller4bitBi (bd, bi) = (df, writeToBiSignal bd d', bo)
                       => Signal dom (BitVector 4, Bus_Input)
                       -> Signal dom (Data_Input 4, Bus_Output)
 input (di, bus)
-output d = empty_data
+output d = empty_data :: Data_Input 4
 output b = busy_bus
 fun sendnibble (rs, d):
     repeat1 unsigned_cycles_ns (clockPeriod @dom) d50:
