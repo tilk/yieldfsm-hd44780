@@ -10,3 +10,8 @@ The controller variants differ on:
 
 The controllers present a simple bus with ready/busy signals, which can be easily adapted to Avalon, Wishbone or other standard buses used on FPGA.
 
+# Building and running
+
+Building is done using `stack` (use `stack build`).
+
+A "hello world" example can be built using Shake (use `stack run`). The built cores (as Verilog files) can be found in the `_build` subdirectory, which can then be, for example, synthesized to an FPGA using any toolchain of choice.
