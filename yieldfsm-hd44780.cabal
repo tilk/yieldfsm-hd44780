@@ -89,6 +89,10 @@ library
     FSM.HD44780
     FSM.HD44780.Definitions
     FSM.HD44780.Commands
+    FSM.HD44780.Controller8bit
+    FSM.HD44780.Controller8bitBi
+    FSM.HD44780.Controller4bit
+    FSM.HD44780.Controller4bitBi
 
 executable helloworld
   import: common-options
