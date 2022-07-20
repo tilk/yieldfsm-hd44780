@@ -1,3 +1,10 @@
+{-|
+Copyright  :  (C) 2022 Marek Materzok
+License    :  BSD2 (see the file LICENSE)
+Maintainer :  Marek Materzok <tilk@tilk.eu>
+
+4-bit controller, unidirectional communication.
+-}
 module FSM.HD44780.Controller4bit(controller4bit) where
 
 import FSM

@@ -1,47 +1,75 @@
+{-|
+Copyright  :  (C) 2022 Marek Materzok
+License    :  BSD2 (see the file LICENSE)
+Maintainer :  Marek Materzok <tilk@tilk.eu>
+
+Definitions for the HD44780 communication protocol.
+-}
 module FSM.HD44780.Commands where
 
 import Clash.Prelude
 import Clash.Annotations.BitRepresentation
 import Clash.Annotations.BitRepresentation.Deriving
 
-data EDir = EDecrement | EIncrement
+-- | CGRAM\/DDRAM address counter counting direction. Corresponds to the I\/D bit in the datasheet.
+data EDir = EDecrement  -- ^ Decrement address after write.
+          | EIncrement  -- ^ Increment address after write.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data EShift = ENoShift | EShift
+-- | Display shifting after writes to DDRAM. Corresponds to the S bit in the datasheet.
+data EShift = ENoShift  -- ^ Don't shift the display after DDRAM write.
+            | EShift    -- ^ Shift the display after DDRAM write.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data DDisplay = DOff | DOn
+-- | Display state. Corresponds to the D bit in the datasheet.
+data DDisplay = DOff    -- ^ Display turned off - nothing is displayed.
+              | DOn     -- ^ Display turned on.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data DCursor = DNoCursor | DCursor
+-- | Cursor visibility. Corresponds to the C bit in the datasheet.
+data DCursor = DNoCursor -- ^ Cursor not visible.
+             | DCursor   -- ^ Cursor visible.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data DBlink = DNoBlink | DBlink
+-- | Blinking of the character indicated by the cursor.  Corresponds to the B bit in the datasheet.
+data DBlink = DNoBlink  -- ^ No blinking.
+            | DBlink    -- ^ Blinking.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data SShift = SCursor | SShift
+-- | Shift cursor or display. Corresponds to the S\/C bit in the datasheet.
+data SShift = SCursor   -- ^ Shift cursor.
+            | SShift    -- ^ Shift display.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data SDir = SLeft | SRight
+-- | Shifting direction. Corresponds to the R\/L bit in the datasheet.
+data SDir = SLeft       -- ^ Shift left.
+          | SRight      -- ^ Shift right.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data FLength = F4bit | F8bit
+-- | Interface data length. Corresponds to the DL bit in the datasheet.
+data FLength = F4bit    -- ^ 4-bit interface.
+             | F8bit    -- ^ 8-bit interface.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data FLines = F1line | F2lines
+-- | Number of display lines. Corresponds to the N bit in the datasheet.
+data FLines = F1line    -- ^ 1 display line.
+            | F2lines   -- ^ 2 display lines.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data FFont = F5x8font | F5x10font
+-- | Character font. Corresponds to the F bit in the datasheet.
+data FFont = F5x8font   -- ^ 5x8 font.
+           | F5x10font  -- ^ 5x10 font.
     deriving (Show, Eq, Ord, Enum, Generic, NFDataX, BitPack)
 
-data Command = Clear
-             | Home
-             | EntryMode EDir EShift
-             | Display DDisplay DCursor DBlink
-             | Shift SShift SDir
-             | Function FLength FLines FFont
-             | SetCGRAM (Unsigned 6)
-             | SetDDRAM (Unsigned 7)
+-- | HD44780 commands, to be sent to the instruction register (RS=0).
+data Command = Clear                           -- ^ Clears entire display and sets DDRAM address 0.
+             | Home                            -- ^ Sets DDRAM address 0 and un-shifts the display.
+             | EntryMode EDir EShift           -- ^ Sets cursor move direction and specifies display shift.
+             | Display DDisplay DCursor DBlink -- ^ Sets display on\/off, cursor on\/off, and blinking of cursor position character.
+             | Shift SShift SDir               -- ^ Moves cursor and shifts display without modifying DDRAM.
+             | Function FLength FLines FFont   -- ^ Sets interface data length, number of display lines and character font.
+             | SetCGRAM (Unsigned 6)           -- ^ Sets CGRAM address. Following reads\/writes are to CGRAM.
+             | SetDDRAM (Unsigned 7)           -- ^ Sets DDRAM address. Following reads\/writes are to DDRAM.
 {-# ANN module (DataReprAnn 
                 $(liftQ [t|Command|])
                 8

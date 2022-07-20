@@ -1,3 +1,10 @@
+{-|
+Copyright  :  (C) 2022 Marek Materzok
+License    :  BSD2 (see the file LICENSE)
+Maintainer :  Marek Materzok <tilk@tilk.eu>
+
+HD44780 display driver controllers written in YieldFSM.
+-}
 {-# LANGUAGE FlexibleContexts #-}
 module FSM.HD44780(
     controller4bit, controller8bit,

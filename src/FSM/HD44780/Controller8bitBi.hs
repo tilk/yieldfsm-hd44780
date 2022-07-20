@@ -1,3 +1,10 @@
+{-|
+Copyright  :  (C) 2022 Marek Materzok
+License    :  BSD2 (see the file LICENSE)
+Maintainer :  Marek Materzok <tilk@tilk.eu>
+
+8-bit controller, bidirectional communication.
+-}
 module FSM.HD44780.Controller8bitBi(controller8bitBi) where
 
 import FSM
